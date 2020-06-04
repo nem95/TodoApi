@@ -4,7 +4,7 @@
 
  ****/
 
-// const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 // import environmental variables from our .env file
 require('dotenv').config();
 
@@ -17,20 +17,20 @@ if (major < 10 || (major === 10 && minor <= 21)) {
 
 
 // Connect to our Database and handle any bad connections
-// mongoose.connect(process.env.DATABASE, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// });
-// mongoose.Promise = global.Promise; // Tell Mongoose to use ES6 promises
-// mongoose.connection.on('error', (err) => {
-//   console.error(`🙅 🚫 🙅 🚫 🙅 🚫 🙅 🚫 → ${err.message}`);
-// });
+mongoose.connect(process.env.DATABASE, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+mongoose.Promise = global.Promise; // Tell Mongoose to use ES6 promises
+mongoose.connection.on('error', (err) => {
+  console.error(`🙅 🚫 🙅 🚫 🙅 🚫 🙅 🚫 → ${err.message}`);
+});
 
 // READY?! Let's go!
 
 // import all of our models
 
-// require('./models/User');
+require('./models/Todo');
 // require('./models/Store');
 
 // Start our app!
