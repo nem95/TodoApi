@@ -6,7 +6,7 @@
   "scripts": {
     "watch": "nodemon start.js",
     "dev": "concurrently \"npm run watch\" \"npm run testDev\"",
-    "testDev": "jest --watchAll",
+    "testDev": "jest --watch",
     "test": "jest"
   },
   "keywords": [],
@@ -20,6 +20,7 @@
     "supertest": "^4.0.2"
   },
   "devDependencies": {
+    "faker": "^4.1.0",
     "jest": "^26.0.1"
   }
 }
