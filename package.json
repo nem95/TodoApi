@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "watch": "nodemon start.js",
-    "dev": "concurrently \"npm run watch\" \"npm run test\"",
-    "test": "jest --watchAll"
+    "dev": "concurrently \"npm run watch\" \"npm run testDev\"",
+    "testDev": "jest --watchAll",
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
