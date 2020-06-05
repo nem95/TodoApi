@@ -1,10 +1,20 @@
-const todoController = require('../controllers/todoController');
 const supertest = require('supertest');
+require('../start');
 const app = require('../app');
+const { seedData, deleteData } = require('../helpers/SeedTodos');
 
 describe('Todo Controller', () => {
+  beforeAll(async () => {
+    await seedData();
+  });
+
+  afterAll(async () => {
+    await deleteData();
+  });
+
   describe('Fetch all todos', () => {
     test('it should return an object containing all the todos', async () => {
+
       const response = await supertest(app).get('/todos');
 
       expect(response.status).toBe(200);
