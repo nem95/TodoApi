@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "watch": "nodemon start.js",
-    "dev": "concurrently \"npm run watch\" \"npm run testDev\"",
-    "testDev": "jest --watch",
+    "dev": "npm run watch",
+    "testDev": "NODE_ENV=test jest --watch",
     "test": "jest"
   },
   "keywords": [],
