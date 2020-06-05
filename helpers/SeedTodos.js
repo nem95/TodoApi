@@ -1,6 +1,8 @@
 const faker = require('faker');
 const mongoose = require('mongoose');
-require('dotenv').config('../.env');
+const envPath = process.env.NODE_ENV ? { path: './testVariables.env'} : '../.env';
+
+require('dotenv').config(envPath);
 
 mongoose.connect(process.env.DATABASE);
 mongoose.Promise = global.Promise; // Tell Mongoose to use ES6 promises
@@ -19,7 +21,7 @@ function fakeTodos() {
   });
   console.log(todos);
 
-  return todos; //sentence
+  return todos;
 };
 
 async function deleteData() {
@@ -28,29 +30,31 @@ async function deleteData() {
     const todosDeleted = await Todo.deleteMany();
     console.log(todosDeleted.deletedCount);
     console.log('Data Deleted. ');
-    process.exit();
   } catch (error) {
     console.error(error);
   }
+  return;
 };
 
 async function seedData() {
   try {
     const todo = await Todo.insertMany(fakeTodos());
-    console.log(app);
-    process.exit();
+    console.log(todo);
   } catch (error) {
     console.log('erreur', error);
+  }
+  return;
+}
+
+// check if node env isn't test
+if (process.env.NODE_ENV !== 'test') {
+  if (process.argv.includes('--delete')) {
+    deleteData();
+    process.exit();
+  } else {
+    seedData();
     process.exit();
   }
 }
-if (process.argv.includes('--delete')) {
-  deleteData();
-} else {
-  // console.log(fakeTodos());
-  seedData();
-}
 
-// var randomName = faker.name.findName(); // Rowan Nikolaus
-// var randomEmail = faker.internet.email(); // Kassandra.Haley@erich.biz
-// var randomCard = faker.helpers.createCard(); // random contact card containing many properties
+module.exports = { seedData, deleteData };
