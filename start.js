@@ -5,8 +5,12 @@
  ****/
 
 const mongoose = require('mongoose');
+
+// Check if process.env.NODE_ENV exist and if it's equal to 'test' in order to choose the right .env file
+const envPath = process.env.NODE_ENV && process.env.NODE_ENV == 'test' ? { path: './testVariables.env'} : '';
+
 // import environmental variables from our .env file
-require('dotenv').config();
+require('dotenv').config(envPath);
 
 // Make sure we are running node 10+
 const [major, minor] = process.versions.node.split('.').map(parseFloat);
@@ -14,7 +18,6 @@ if (major < 10 || (major === 10 && minor <= 21)) {
   console.log('🛑 🌮 🐶 💪 💩\nHey You! \n\t ya you! \n\t\tBuster! \n\tYou\'re on an older version of node that doesn\'t support the latest and greatest things we are learning (Async + Await)! Please go to nodejs.org and download version 7.6 or greater. 👌\n ');
   process.exit();
 }
-
 
 // Connect to our Database and handle any bad connections
 mongoose.connect(process.env.DATABASE, {
