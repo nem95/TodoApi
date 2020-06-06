@@ -4,7 +4,7 @@ mongoose.Promise = global.Promise;
 const todoSchema = new mongoose.Schema({
   task: {
     type: String,
-    required: 'Your review must provide a task!'
+    required: 'You must provide a task!'
   },
   isDone: {
     type: Boolean,

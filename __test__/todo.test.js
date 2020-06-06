@@ -26,7 +26,7 @@ describe('Todo Controller', () => {
     test('it should add and return the new todo', async () => {
       const response = await supertest(app)
         .post('/todos/add')
-        .send({ name: 'john' })
+        .send({ task: 'tester l\'api NodeJS' })
         .set('Accept', 'application/json');
 
       expect(response.status).toBe(200);
@@ -38,11 +38,13 @@ describe('Todo Controller', () => {
     test('it should throw an error', async () => {
       const response = await supertest(app)
         .post('/todos/add')
-        .send('serpentar')
+        .send()
         .set('Accept', 'application/json');
 
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('todo');
+      expect(response.status).toBe(500);
+      // Pas très convaincu par ce text
+      expect(JSON.parse(response.res.text).message).toBe('You must provide a task!');
+      expect(JSON.parse(response.res.text)).toHaveProperty('message');
     });
   });
 
