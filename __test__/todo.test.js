@@ -50,38 +50,58 @@ describe('Todo Controller', () => {
 
   describe('Edit todo with valid data', () => {
     test('it should edit the todo', async () => {
+      const todo = await supertest(app)
+        .post('/todos/add')
+        .send({ task: 'tester l\'api NodeJS' })
+        .set('Accept', 'application/json');
+
       const response = await supertest(app)
-        .post('/todos/15/edit')
-        .send({ name: 'john' })
+        .post(`/todos/${todo.body.todo._id}/edit`)
+        .send({
+          task: "tester api NodeJS Updated",
+          isDone: true,
+          isDeleted: false,
+        })
         .set('Accept', 'application/json');
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('todo');
-
+      expect(response.body.todo.task).toBe("tester api NodeJS Updated");
+      expect(response.body.todo.isDone).toBe(true);
     });
   });
 
   describe('Edit todo with invalid data', () => {
     test('it should throw an error', async () => {
+      const todo = await supertest(app)
+      .post('/todos/add')
+      .send({ task: 'tester l\'api NodeJS' })
+      .set('Accept', 'application/json');
+
       const response = await supertest(app)
-        .post('/todos/15/edit')
-        .send({ name: 'john' })
+        .post(`/todos/${todo.body.todo._id}/edit`)
+        .send()
         .set('Accept', 'application/json');
 
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('todo');
+      expect(response.status).toBe(500);
+      // Pas très convaincu par ce text
+      expect(JSON.parse(response.res.text).message).toBe('You must provide a task!');
+      expect(JSON.parse(response.res.text)).toHaveProperty('message');
     });
   });
 
-  describe('Edit todo with invalid user', () => {
+  describe('Edit todo with invalid id', () => {
     test('it should throw an error', async () => {
       const response = await supertest(app)
-        .post('/todos/15/edit')
-        .send({ name: 'john' })
+        .post(`/todos/invalidId/edit`)
+        .send({ task: 'test with invalid id, it should fail' })
         .set('Accept', 'application/json');
 
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('todo');
+      console.log(JSON.parse(response.res.text));
+
+      expect(response.status).toBe(500);
+      // Pas très convaincu par ce text
+      expect(JSON.parse(response.res.text)).toHaveProperty('message');
     });
   });
 
