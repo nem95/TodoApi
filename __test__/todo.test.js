@@ -43,8 +43,8 @@ describe('Todo Controller', () => {
 
       expect(response.status).toBe(500);
       // Pas très convaincu par ce text
-      expect(JSON.parse(response.res.text).message).toBe('You must provide a task!');
-      expect(JSON.parse(response.res.text)).toHaveProperty('message');
+      expect(response.body).toHaveProperty('message');
+      expect(response.body.message).toBe('You must provide a task!');
     });
   });
 
@@ -85,8 +85,8 @@ describe('Todo Controller', () => {
 
       expect(response.status).toBe(500);
       // Pas très convaincu par ce text
-      expect(JSON.parse(response.res.text).message).toBe('You must provide a task!');
-      expect(JSON.parse(response.res.text)).toHaveProperty('message');
+      expect(response.body).toHaveProperty('message');
+      expect(response.body.message).toBe('You must provide a task!');
     });
   });
 
@@ -94,12 +94,19 @@ describe('Todo Controller', () => {
     test('it should throw an error', async () => {
       const response = await supertest(app)
         .post(`/todos/invalidId/edit`)
-        .send({ task: 'test with invalid id, it should fail' })
+        .send({
+          task: 'test with invalid id, it should fail',
+          isDone: false,
+        })
         .set('Accept', 'application/json');
+
+        console.log("response.body");
+        console.log(response.body);
 
       expect(response.status).toBe(500);
       // Pas très convaincu par ce text
-      expect(JSON.parse(response.res.text)).toHaveProperty('message');
+      expect(response.body).toHaveProperty('message');
+      expect(response.body.message).toBe('Cast to ObjectId failed for value "invalidId" at path "_id" for model "Todo"');
     });
   });
 
@@ -135,14 +142,13 @@ describe('Todo Controller', () => {
         .post(`/todos/${todo.body.todo._id}/edit`)
         .send({
           task: todo.body.todo.task,
-          isDone: true
         })
         .set('Accept', 'application/json');
 
       expect(response.status).toBe(500);
       // Pas très convaincu par ce text
-      expect(JSON.parse(response.res.text)).toHaveProperty('message');
-      expect(JSON.parse(response.res.text).message).toBe('it should be from type BOOLEAN');
+      expect(response.body).toHaveProperty('message');
+      expect(response.body.message).toBe('it should be from type BOOLEAN');
     });
   });
 
