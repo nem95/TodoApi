@@ -10,9 +10,14 @@ router.post('/todos/add',
   catchErrors(todoController.createTodo)
 );
 router.post('/todos/:id/edit',
-  todoController.preValidateTodo,
+  todoController.preValidateTodoUpdate,
   todoController.validateCreateTodo,
   catchErrors(todoController.updateTodo)
+);
+router.post('/todos/:id/finish',
+  todoController.preValidateTodoUpdate,
+  todoController.validateCreateTodo,
+  catchErrors(todoController.updateTodoStatus)
 );
 
 router.post('/todos/:id/delete', function (req, res) {

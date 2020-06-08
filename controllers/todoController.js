@@ -12,6 +12,11 @@ exports.preValidateTodo = [
   check('task').not().isEmpty().escape().withMessage('You must provide a task!'),
 ];
 
+exports.preValidateTodoUpdate = [
+  check('task').not().isEmpty().escape().withMessage('You must provide a task!'),
+  check('isDone').isBoolean().withMessage('it should be from type BOOLEAN'),
+];
+
 exports.validateCreateTodo = (req, res, next) => {
   const result = validationResult(req);
 
@@ -38,13 +43,16 @@ exports.updateTodo = async (req, res) => {
   res.json({ todo });
 };
 
-exports.finishTodo = async (req, res) => {
-  // const todo = await Todo.findOneAndUpdate({ _id: req.params.id }, req.body, {
-  //   new: true, // return the new store instead of the old one
-  //   runValidators: true,
-  // }).exec();
+exports.updateTodoStatus = async (req, res) => {
+  // pas sûr de la technique, mais au moins on est sur d'avoir les valeurs de todo les plus a jours
+  const todo = await Todo.findOne({ _id: req.params.id });
 
-  res.json({ todo: "dede" });
+  const updateTodo = await Todo.findOneAndUpdate({ _id: req.params.id }, { isDone: !todo.isDone }, {
+    new: true, // return the new store instead of the old one
+    runValidators: true,
+  }).exec();
+
+  res.json({ updateTodo });
 };
 
 exports.deleteTodo = async (req, res) => {

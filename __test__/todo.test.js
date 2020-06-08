@@ -59,7 +59,7 @@ describe('Todo Controller', () => {
         .post(`/todos/${todo.body.todo._id}/edit`)
         .send({
           task: "tester api NodeJS Updated",
-          isDone: true,
+          isDone: false,
           isDeleted: false,
         })
         .set('Accept', 'application/json');
@@ -67,16 +67,16 @@ describe('Todo Controller', () => {
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('todo');
       expect(response.body.todo.task).toBe("tester api NodeJS Updated");
-      expect(response.body.todo.isDone).toBe(true);
+      expect(response.body.todo.isDone).toBe(false);
     });
   });
 
   describe('Edit todo with invalid data', () => {
     test('it should throw an error', async () => {
       const todo = await supertest(app)
-      .post('/todos/add')
-      .send({ task: 'tester l\'api NodeJS' })
-      .set('Accept', 'application/json');
+        .post('/todos/add')
+        .send({ task: 'tester l\'api NodeJS' })
+        .set('Accept', 'application/json');
 
       const response = await supertest(app)
         .post(`/todos/${todo.body.todo._id}/edit`)
@@ -97,47 +97,70 @@ describe('Todo Controller', () => {
         .send({ task: 'test with invalid id, it should fail' })
         .set('Accept', 'application/json');
 
-      console.log(JSON.parse(response.res.text));
-
       expect(response.status).toBe(500);
       // Pas très convaincu par ce text
       expect(JSON.parse(response.res.text)).toHaveProperty('message');
     });
   });
 
-  describe('Delete existing todo with valid', () => {
-    test('it should delete the todo', async () => {
+  describe('Change todo Done status', () => {
+    test('it should change the isDone status to true and send back the new todo', async () => {
+      const todo = await supertest(app)
+        .post('/todos/add')
+        .send({ task: 'todo with status done' })
+        .set('Accept', 'application/json');
+
       const response = await supertest(app)
-        .post('/todos/15/delete')
-        .send({ name: 'john' })
+        .post(`/todos/${todo.body.todo._id}/edit`)
+        .send({
+          task: todo.body.todo.task,
+          isDone: true
+        })
         .set('Accept', 'application/json');
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('todo');
+      expect(response.body.todo.isDone).toBe(true);
+    });
+  });
+
+  describe('Change todo Done statu with invalid data', () => {
+    test('it should returrn an error', async () => {
+      const todo = await supertest(app)
+        .post('/todos/add')
+        .send({ task: 'todo with status done' })
+        .set('Accept', 'application/json');
+
+      const response = await supertest(app)
+        .post(`/todos/${todo.body.todo._id}/edit`)
+        .send({
+          task: todo.body.todo.task,
+          isDone: true
+        })
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(500);
+      // Pas très convaincu par ce text
+      expect(JSON.parse(response.res.text)).toHaveProperty('message');
+      expect(JSON.parse(response.res.text).message).toBe('it should be from type BOOLEAN');
+    });
+  });
+
+  describe('Delete existing todo', () => {
+    test('it should delete the todo', async () => {
+      // add test
     });
   });
 
   describe('Delete existing todo with valid user', () => {
     test('it should delete the todo', async () => {
-      const response = await supertest(app)
-        .post('/todos/15/delete')
-        .send({ name: 'john' })
-        .set('Accept', 'application/json');
-
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('todo');
+      // add test
     });
   });
 
   describe('Delete existing todo with invalid user', () => {
     test('it should not delete the todo and throw an error ', async () => {
-      const response = await supertest(app)
-        .post('/todos/15/delete')
-        .send({ name: 'john' })
-        .set('Accept', 'application/json');
-
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('todo');
+      // add test
     });
   });
 
