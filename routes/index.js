@@ -20,8 +20,6 @@ router.post('/todos/:id/finish',
   catchErrors(todoController.updateTodoStatus)
 );
 
-router.post('/todos/:id/delete', function (req, res) {
-  res.send(`Delete post ${req.params.id}`);
-});
+router.post('/todos/:id/delete', catchErrors(todoController.deleteTodo));
 
 module.exports = router;

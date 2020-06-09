@@ -56,10 +56,10 @@ exports.updateTodoStatus = async (req, res) => {
 };
 
 exports.deleteTodo = async (req, res) => {
-  // const todo = await Todo.findOneAndUpdate({ _id: req.params.id }, req.body, {
-  //   new: true, // return the new store instead of the old one
-  //   runValidators: true,
-  // }).exec();
+  const deleteTodo = await Todo.findOneAndUpdate({ _id: req.params.id }, { isDeleted: true }, {
+    new: true, // return the new store instead of the old one
+    runValidators: true,
+  }).exec();
 
-  res.json({ todo: "dede" });
+  res.json({ message: "The todo was successfully deleted!" });
 };

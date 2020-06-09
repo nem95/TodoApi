@@ -60,7 +60,6 @@ describe('Todo Controller', () => {
         .send({
           task: "tester api NodeJS Updated",
           isDone: false,
-          isDeleted: false,
         })
         .set('Accept', 'application/json');
 
@@ -99,9 +98,6 @@ describe('Todo Controller', () => {
           isDone: false,
         })
         .set('Accept', 'application/json');
-
-        console.log("response.body");
-        console.log(response.body);
 
       expect(response.status).toBe(500);
       // Pas très convaincu par ce text
@@ -154,7 +150,35 @@ describe('Todo Controller', () => {
 
   describe('Delete existing todo', () => {
     test('it should delete the todo', async () => {
-      // add test
+      const todo = await supertest(app)
+        .post('/todos/add')
+        .send({ task: 'todo with status done' })
+        .set('Accept', 'application/json');
+
+      const response = await supertest(app)
+        .post(`/todos/${todo.body.todo._id}/delete`)
+        .send({
+          task: todo.body.todo.task,
+        })
+        .set('Accept', 'application/json');
+
+      expect(response.status).toBe(200);
+      // Pas très convaincu par ce text
+      expect(response.body).toHaveProperty('message');
+      expect(response.body.message).toBe('The todo was successfully deleted!');
+    });
+  });
+
+  describe('Delete non-existing todo ', () => {
+    test('it should throw an error', async () => {
+      const response = await supertest(app)
+        .post(`/todos/invalidId/delete`)
+        .send()
+
+      expect(response.status).toBe(500);
+      // Pas très convaincu par ce text
+      expect(response.body).toHaveProperty('message');
+      expect(response.body.message).toBe('Cast to ObjectId failed for value "invalidId" at path "_id" for model "Todo"');
     });
   });
 
@@ -167,18 +191,6 @@ describe('Todo Controller', () => {
   describe('Delete existing todo with invalid user', () => {
     test('it should not delete the todo and throw an error ', async () => {
       // add test
-    });
-  });
-
-  describe('Delete non-existing todo ', () => {
-    test('it should throw an error', async () => {
-      const response = await supertest(app)
-        .post('/todos/15/delete')
-        .send({ name: 'john' })
-        .set('Accept', 'application/json');
-
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('todo');
     });
   });
 });
