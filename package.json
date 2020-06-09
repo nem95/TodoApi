@@ -7,7 +7,10 @@
     "watch": "nodemon start.js",
     "dev": "npm run watch",
     "testDev": "NODE_ENV=test jest --watch",
-    "test": "jest"
+    "test": "jest",
+    "testCov": "jest --coverage",
+    "seedDB": "node helpers/SeedTodos.js",
+    "removeDataFromDB": "node helpers/SeedTodos.js --delete"
   },
   "keywords": [],
   "author": "",
