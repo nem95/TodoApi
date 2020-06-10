@@ -3,9 +3,11 @@ const Todo = mongoose.model('Todo');
 const { check, validationResult } = require('express-validator');
 
 exports.getTodos = async (req, res) => {
-  const todos = await Todo.find();
+  const todosPromise = Todo.find({ isDeleted: false });
+  const countPromise = Todo.countDocuments({ isDone: true, isDeleted: false });
 
-  res.json({ todos });
+  const [todos, count] = await Promise.all([todosPromise, countPromise]);
+  res.json({ todos, count });
 };
 
 exports.preValidateTodo = [
