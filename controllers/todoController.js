@@ -5,9 +5,10 @@ const { check, validationResult } = require('express-validator');
 exports.getTodos = async (req, res) => {
   const todosPromise = Todo.find({ isDeleted: false });
   const countPromise = Todo.countDocuments({ isDone: true, isDeleted: false });
+  const deletedCountPromise = Todo.countDocuments({ isDeleted: true });
 
-  const [todos, count] = await Promise.all([todosPromise, countPromise]);
-  res.json({ todos, count });
+  const [todos, count, deletedCount] = await Promise.all([todosPromise, countPromise, deletedCountPromise]);
+  res.json({ todos, count, deletedCount });
 };
 
 exports.preValidateTodo = [
