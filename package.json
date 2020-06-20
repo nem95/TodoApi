@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "node start.js",
     "watch": "nodemon start.js",
     "dev": "npm run watch",
     "testDev": "NODE_ENV=test jest --watch",
